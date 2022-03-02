@@ -1,15 +1,17 @@
-name: Check rules
-'on':
-  pull_request:
-    branches:
+--- 
+jobs: 
+  name: "Action For Semantic Release uses:cycjimmy/semantic-release-action@v2.7.0"
+  with: 
+    branch: ~
+    branches: ~
+    dry_run: ~
+    extends: ~
+    extra_plugins: ~
+    working_directory: ~
+name: "Check rules"
+? "on"
+: 
+  pull_request: 
+    branches: 
       - main
       - master
-jobs:
-  name: 'Action For Semantic Release uses:cycjimmy/semantic-release-action@v2.7.0'
-  with:
-    branches: null
-    branch: null
-    extra_plugins: null
-    dry_run: null
-    extends: null
-    working_directory: null
