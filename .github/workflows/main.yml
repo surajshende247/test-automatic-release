@@ -1,9 +1,15 @@
-name: 'Action For Semantic Release uses:cycjimmy/semantic-release-action@v2.7.0'
-on: push
-with:
-  branches: null
-  branch: null
-  extra_plugins: null
-  dry_run: null
-  extends: null
-  working_directory: null
+name: Check rules
+on:
+  pull_request:
+    branches:
+      - develop
+      - master
+jobs:
+  name: 'Action For Semantic Release uses:cycjimmy/semantic-release-action@v2.7.0'
+  with:
+    branches: null
+    branch: null
+    extra_plugins: null
+    dry_run: null
+    extends: null
+    working_directory: null
