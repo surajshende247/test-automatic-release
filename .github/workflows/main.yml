@@ -1,8 +1,8 @@
 name: Check rules
-on:
+'on':
   pull_request:
     branches:
-      - develop
+      - main
       - master
 jobs:
   name: 'Action For Semantic Release uses:cycjimmy/semantic-release-action@v2.7.0'
