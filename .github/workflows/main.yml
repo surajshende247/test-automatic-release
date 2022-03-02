@@ -1,4 +1,5 @@
 name: 'Action For Semantic Release uses:cycjimmy/semantic-release-action@v2.7.0'
+on: push
 with:
   branches: null
   branch: null
