@@ -1,72 +1,29 @@
----
-branch: master
-preset: "angular"
-tagFormat: "${version}"
-plugins:
-  - "@semantic-release/commit-analyzer"
-  - "@semantic-release/release-notes-generator"
-  - "@semantic-release/changelog"
-  - "@semantic-release/git"
-  - "@semantic-release/github"
+name: Releases
+on:
+  push:
+    branches:
+      - main
 
-verifyConditions:
-  - '@semantic-release/git'
-  - "@semantic-release/github"
-analyzeCommits:
-  - path: "@semantic-release/commit-analyzer"
-    releaseRules:
-    - type: "feat"
-      release: "patch"
-    - type: "hotfix"
-      release: "patch"
-    - type: "patch"
-      release: "patch"
-    - type: "minor"
-      release: "minor"
-    - type: "breaking"
-      release: "major"
-generateNotes:
-  - path: "@semantic-release/release-notes-generator"
-    writerOpts:
-      groupBy: "type"
-      commitGroupsSort:
-        - "feat"
-        - "perf"
-        - "fix"
-      commitsSort: "header"
-    types:
-    - type: "feat"
-    - section: "Features"
-    # Tracked bug fix with a hotfix branch
-    - type: "hotfix"
-    - section: "Bug Fixes"
-    # Uninmportent fix (CI testing, etc)
-    - type: "fix"
-    - hidden: true
-    - type: "chore"
-    - hidden: true
-    - type: "docs"
-    - hidden: true
-    - type: "doc"
-    - hidden: true
-    - type: "style"
-    - hidden: true
-    - type: "refactor"
-    - hidden: true
-    - type: "perf"
-    - hidden: true
-    - type: "test"
-    - hidden: true
-    presetConfig: true
-prepare:
-  - path: "@semantic-release/git"
-  - path: "@semantic-release/changelog"
-    changelogFile: "docs/CHANGELOG.md"
-publish:
-  - path: "@semantic-release/github"
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
 
-success:
-  - "@semantic-release/github"
+    steps:
+      - uses: actions/checkout@v2
 
-fail:
-  - "@semantic-release/github"
+      - name: conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3.7.1
+        with:
+          github-token: ${{ secrets.CHANGELOG_RELEASE }}
+          version-file: './package.json,./package-lock.json'
+
+      - name: create release
+        uses: actions/create-release@v1
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.CHANGELOG_RELEASE }}
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          release_name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
